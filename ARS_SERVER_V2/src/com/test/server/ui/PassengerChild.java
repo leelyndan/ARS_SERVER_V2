@@ -1,0 +1,70 @@
+package com.test.server.ui;
+
+import java.io.BufferedReader;
+import java.io.PrintWriter;
+
+import com.test.server.constant.ErrorCode;
+import com.test.server.store.UserInputStore;
+import com.test.server.util.MathUtil;
+
+public class PassengerChild extends CommonUI{
+
+	private UserInputStore clientInputs;
+
+	public PassengerChild(PrintWriter os,BufferedReader is ,UserInputStore clientInputs) 
+	{
+		super(os, is);
+		this.clientInputs = clientInputs;
+	}
+
+	@Override
+	 String generatorView() {
+		StringBuilder show = new StringBuilder(
+				"****************************************");
+		show.append("\n");
+		show.append("Passenger");
+		show.append("\n");
+		show.append("****************************************");
+		show.append("\n");
+		show.append("Please, Input the number of Child.");
+		show.append("\n");
+		show.append("(0 ~ 10)");
+		show.append("\n");
+		show.append("P. Previous Menu");
+		show.append("\n");
+		show.append("Q. Quit");
+		show.append("\n");
+		show.append("****************************************");
+		return show.toString();
+	}
+
+	@Override
+     boolean paramCheck(String message) {
+		if (message == null || "".equals(message)) {
+			os.println(ErrorCode.ERROR_CODE);
+			os.flush();
+			return false;
+		}
+		if ("p".equalsIgnoreCase(message)||"q".equalsIgnoreCase(message)) {
+			return true;
+		}
+		if (!MathUtil.isNumeric(message)) {
+			os.println(ErrorCode.ERROR_CODE);
+			os.flush();
+			return false;
+		}
+		int adultNum = Integer.valueOf(clientInputs.getLastUserInputCmd());
+		int allNum = adultNum + Integer.valueOf(message);
+		if (allNum <= 0) {
+			os.println(ErrorCode.ERROR_PASSENGER_NUM_CODE);
+			os.flush();
+			return false;
+		}
+		return true;
+	}
+
+	@Override
+	StringBuilder generatorData() {
+		return null;
+	}
+}
